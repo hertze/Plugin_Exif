@@ -19,7 +19,10 @@ class Plugin_exif extends Plugin {
       		} catch (Exception $e) { 
 	      		var_dump($e->__toString()); 
 	      	} 
-
+	    if (strlen($raw['EXIF']['FocalLength'])>0) {
+      			$flength = round(floatval(substr($raw['EXIF']['FocalLength'], 0, strpos($raw['EXIF']['FocalLength'],'/')))/floatval(substr($raw['EXIF']['FocalLength'], strpos($raw['EXIF']['FocalLength'],'/')+1, strlen($raw['EXIF']['FocalLength'])))).'mm';
+      	}
+      		
         return array(
           'imagewidth' => $raw['IFD0']['ImageWidth'],
           'imageheight' => $raw['IFD0']['ImageLength'], 
@@ -30,7 +33,7 @@ class Plugin_exif extends Plugin {
           'software' => $raw['IFD0']['Software'].'s',
           'aperture' => $raw['COMPUTED']['ApertureFNumber'],
           'exposure' => $raw['EXIF']['ExposureTime'].'s',
-          'flenght' => str_replace('/1','mm',$raw['EXIF']['FocalLength']),
+          'flenght' => $flength,
           'iso' => 'ISO '.$raw['EXIF']['ISOSpeedRatings']
         );  
       }
