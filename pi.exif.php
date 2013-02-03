@@ -26,7 +26,7 @@ class Plugin_exif extends Plugin {
           'datetime' => $raw['IFD0']['DateTime'],	
           'model' => $raw['IFD0']['Model'],
           'make' => $raw['IFD0']['Make'],
-          'camera' => preg_replace(array('/\ IMAGING\ CORP\./', '/\ CORPORATION/'), '', $raw['IFD0']['Make']).''.preg_replace(array('/NIKON\ /'), '', $raw['IFD0']['Model']),
+          'camera' => ucfirst(strtolower(preg_replace(array('/\ IMAGING\ CORP\./', '/\ CORPORATION/'), '', $raw['IFD0']['Make']))).''.preg_replace(array('/NIKON\ /'), '', $raw['IFD0']['Model']),
           'software' => $raw['IFD0']['Software'].'s',
           'aperture' => $raw['COMPUTED']['ApertureFNumber'],
           'exposure' => $raw['EXIF']['ExposureTime'].'s',
