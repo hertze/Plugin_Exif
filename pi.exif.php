@@ -13,7 +13,9 @@ class Plugin_exif extends Plugin {
       $imagepath = $this->fetch_param('imagepath', null, false, false, false);
       
       if ($imagepath) {
-      
+      	
+      	$imagepath = trim($imagepath, '/'); // We need to rid ourselves of any leading slashes for this to work
+      	
       	try { 
       		$raw = exif_read_data($_SERVER['DOCUMENT_ROOT'].$imagepath, 0, true); 
       		} catch (Exception $e) { 
