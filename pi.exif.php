@@ -31,10 +31,10 @@ class Plugin_exif extends Plugin {
       	// Unfortunately, inconsistencies is naming between camera makers makes it necessary to customize
       	// the cleaning up of exif data. The following takes care of Nikon and Olympus cameras. Feel free to
       	// add more as you find necessary. 
-      	$make_pattern = array('/\ IMAGING\ CORP\./', '/\ CORPORATION/');
+      	$make_pattern = array('/(\ IMAGING\ CORP\.)(\ )*/', '/\ CORPORATION/');
       	$make_replace = array('','');
-      	$model_pattern = array('/NIKON/');
-      	$model_replace = array('');
+      	$model_pattern = array('/NIKON/','/(\ )*/');
+      	$model_replace = array('','');
       		
         return array(
           'imagewidth' => $raw['IFD0']['ImageWidth'],
@@ -42,7 +42,7 @@ class Plugin_exif extends Plugin {
           'datetime' => $raw['IFD0']['DateTime'],	
           'model' => $raw['IFD0']['Model'],
           'make' => $raw['IFD0']['Make'],
-          'camera' => ucfirst(strtolower(preg_replace($make_pattern, $make_replace, $raw['IFD0']['Make']))).''.preg_replace($model_pattern, $model_replace, $raw['IFD0']['Model']),
+          'camera' => ucfirst(strtolower(preg_replace($make_pattern, $make_replace, $raw['IFD0']['Make']))).' '.preg_replace($model_pattern, $model_replace, $raw['IFD0']['Model']),
           'software' => $raw['IFD0']['Software'].'s',
           'aperture' => $raw['COMPUTED']['ApertureFNumber'],
           'exposure' => $raw['EXIF']['ExposureTime'].'s',
