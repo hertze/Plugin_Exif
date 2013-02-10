@@ -31,11 +31,18 @@ class Plugin_exif extends Plugin {
       	// Unfortunately, inconsistencies is naming between camera makers makes it necessary to customize
       	// the cleaning up of exif data. The following takes care of Nikon and Olympus cameras. Feel free to
       	// add more as you find necessary. 
-      	$make_pattern = array('/(\ IMAGING\ CORP\.)(\ )*/', '/\ CORPORATION/');
+      	$make_pattern = array('/(\sIMAGING\sCORP\.)(\s)*/', '/\sCORPORATION/');
       	$make_replace = array('','');
-      	$model_pattern = array('/NIKON/','/(\ )*/');
+      	$model_pattern = array('/NIKON/','/(\s)*/');
       	$model_replace = array('','');
-      		
+      	
+      	// For extra credit, determine if the camera name should be preceeded by 'a' or 'an'.
+      	if ( preg_match('/^[AOUEY]/', preg_replace($make_pattern, $make_replace, $raw['IFD0']['Make'])) == 1 ) {
+	      	$indefinite_article = 'an';
+      	} else {
+	      	$indefinite_article = 'a';
+      	}
+      	
         return array(
           'imagewidth' => $raw['IFD0']['ImageWidth'],
           'imageheight' => $raw['IFD0']['ImageLength'], 
@@ -47,7 +54,8 @@ class Plugin_exif extends Plugin {
           'aperture' => $raw['COMPUTED']['ApertureFNumber'],
           'exposure' => $raw['EXIF']['ExposureTime'].'s',
           'flenght' => $flength,
-          'iso' => 'ISO '.$raw['EXIF']['ISOSpeedRatings']
+          'iso' => 'ISO '.$raw['EXIF']['ISOSpeedRatings'],
+          'indefinite_article' => $indefinite_article
         );  
       }
     }
